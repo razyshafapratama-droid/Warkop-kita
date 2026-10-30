@@ -1,0 +1,6 @@
+{
+  "name": "Warkop Kita - Aplikasi Kasir Modern",
+  "description": "Aplikasi Kasir Warkop modern dengan tema cokelat kopi, krem, dan putih: manajemen meja (T1-T6), take away, katalog minuman & makanan, keranjang otomatis, dan cetak struk.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

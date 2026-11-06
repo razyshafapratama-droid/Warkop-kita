@@ -37,7 +37,7 @@ export const CartPanel: React.FC<CartPanelProps> = ({
   const grandTotal = subtotal + taxAmount;
 
   return (
-    <div className="w-full lg:w-[380px] xl:w-[410px] bg-white rounded-3xl border border-[#E5DDD5] shadow-sm flex flex-col justify-between shrink-0 p-5 select-none">
+    <div className="w-full bg-white rounded-3xl border border-[#E5DDD5] shadow-sm flex flex-col justify-between shrink-0 p-5 select-none">
       {/* Cart Header matching reference */}
       <div>
         <div className="flex items-center justify-between pb-4 border-b border-[#F0EAE2]">

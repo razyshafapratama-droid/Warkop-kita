@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Calendar, ChevronDown, User, ShieldCheck } from 'lucide-react';
+import { Search, Calendar, ChevronDown, User, ShieldCheck, Menu } from 'lucide-react';
 import { UserAccount } from '../types';
 
 interface TopHeaderProps {
@@ -9,6 +9,7 @@ interface TopHeaderProps {
   onOpenUserModal: () => void;
   title?: string;
   subtitle?: string;
+  onToggleMobileMenu?: () => void;
 }
 
 export const TopHeader: React.FC<TopHeaderProps> = ({
@@ -18,6 +19,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
   onOpenUserModal,
   title = 'Kasir',
   subtitle = 'Pilih produk dan lakukan transaksi',
+  onToggleMobileMenu,
 }) => {
   const [currentDateTime, setCurrentDateTime] = useState<string>('');
   const [currentTime, setCurrentTime] = useState<string>('');
@@ -48,14 +50,25 @@ export const TopHeader: React.FC<TopHeaderProps> = ({
 
   return (
     <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-      {/* Title & Subtitle */}
-      <div>
-        <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1E120D] tracking-tight font-['Plus_Jakarta_Sans']">
-          {title}
-        </h2>
-        <p className="text-xs sm:text-sm text-[#7A685D] font-medium mt-0.5">
-          {subtitle}
-        </p>
+      {/* Title & Subtitle + Mobile Menu Trigger */}
+      <div className="flex items-center gap-3">
+        {onToggleMobileMenu && (
+          <button
+            onClick={onToggleMobileMenu}
+            className="md:hidden p-2 rounded-2xl bg-white border border-[#E5DDD5] text-[#3D2417] hover:bg-[#F2ECE4] transition-colors shadow-xs"
+            aria-label="Buka Menu Navigasi"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+        )}
+        <div>
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1E120D] tracking-tight font-['Plus_Jakarta_Sans']">
+            {title}
+          </h2>
+          <p className="text-xs sm:text-sm text-[#7A685D] font-medium mt-0.5">
+            {subtitle}
+          </p>
+        </div>
       </div>
 
       {/* Center: Search Bar matching reference image */}

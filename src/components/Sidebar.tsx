@@ -1,16 +1,20 @@
 import React from 'react';
-import { Store, Clock, Package, BarChart3, Settings, LogOut, Coffee } from 'lucide-react';
+import { Store, Clock, Package, BarChart3, Settings, LogOut, Coffee, X } from 'lucide-react';
 
 interface SidebarProps {
   activeTab: 'kasir' | 'riwayat' | 'produk' | 'laporan' | 'pengaturan';
   setActiveTab: (tab: 'kasir' | 'riwayat' | 'produk' | 'laporan' | 'pengaturan') => void;
   onLogout: () => void;
+  isOpenMobile?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   setActiveTab,
   onLogout,
+  isOpenMobile = false,
+  onCloseMobile,
 }) => {
   const navItems = [
     { id: 'kasir' as const, label: 'Kasir', icon: Store },
@@ -21,22 +25,47 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <aside className="w-64 bg-[#1E120D] text-white flex flex-col justify-between shrink-0 min-h-screen border-r border-[#2D1B13] select-none">
-      {/* Brand Header */}
-      <div>
-        <div className="p-6 pb-5 flex items-center gap-3.5 border-b border-[#2C1A12]/80">
-          <div className="w-11 h-11 rounded-2xl bg-[#3D2417] border border-[#5A3622] flex items-center justify-center text-[#D4A373] shadow-md shadow-black/30">
-            <Coffee className="w-6 h-6 stroke-[2.2]" />
+    <>
+      {/* Mobile Backdrop */}
+      {isOpenMobile && (
+        <div
+          onClick={onCloseMobile}
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 md:hidden animate-in fade-in"
+        />
+      )}
+
+      <aside
+        className={`bg-[#1E120D] text-white flex flex-col justify-between shrink-0 h-screen border-r border-[#2D1B13] select-none z-50 transition-transform duration-300 ${
+          isOpenMobile
+            ? 'fixed inset-y-0 left-0 w-64 translate-x-0 shadow-2xl flex'
+            : 'fixed inset-y-0 left-0 w-64 -translate-x-full md:relative md:translate-x-0 md:flex w-60 xl:w-64'
+        }`}
+      >
+        {/* Brand Header */}
+        <div>
+          <div className="p-5 sm:p-6 pb-5 flex items-center justify-between border-b border-[#2C1A12]/80">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-[#3D2417] border border-[#5A3622] flex items-center justify-center text-[#D4A373] shadow-md shadow-black/30">
+                <Coffee className="w-5 h-5 stroke-[2.2]" />
+              </div>
+              <div>
+                <h1 className="text-lg sm:text-xl font-extrabold tracking-tight text-white leading-tight font-['Plus_Jakarta_Sans']">
+                  Warkop Kita
+                </h1>
+                <p className="text-[11px] text-[#C5B3A1] font-medium tracking-wide">
+                  Ngopi, Santai, Produktif
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile close button */}
+            <button
+              onClick={onCloseMobile}
+              className="md:hidden p-1.5 rounded-xl text-[#A89280] hover:text-white hover:bg-[#281812] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
-          <div>
-            <h1 className="text-xl font-extrabold tracking-tight text-white leading-tight font-['Plus_Jakarta_Sans']">
-              Warkop Kita
-            </h1>
-            <p className="text-xs text-[#C5B3A1] font-medium tracking-wide">
-              Ngopi, Santai, Produktif
-            </p>
-          </div>
-        </div>
 
         {/* Navigation Links */}
         <nav className="p-4 space-y-1.5 mt-2">
@@ -90,5 +119,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </button>
       </div>
     </aside>
-  );
+  </>
+);
 };

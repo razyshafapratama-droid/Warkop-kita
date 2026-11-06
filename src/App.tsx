@@ -48,16 +48,8 @@ export default function App() {
   const [orderType, setOrderType] = useState<OrderType>('dine_in');
   const [selectedTable, setSelectedTable] = useState<TableNumber>('T1');
 
-  // Cart State (Initialized with items matching the reference screenshot)
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('warkop_saved_cart_v2');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {}
-    }
-    return [];
-  });
+  // Cart State (Initialized empty as requested)
+  const [cart, setCart] = useState<CartItem[]>([]);
 
   // Selected Payment Method in right panel
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('TUNAI');
@@ -68,6 +60,7 @@ export default function App() {
   const [activeReceiptTransaction, setActiveReceiptTransaction] = useState<Transaction | null>(null);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Toast feedback
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -88,23 +81,6 @@ export default function App() {
       setProducts(prods);
       setTransactions(txs);
       setStoreSettings(settings);
-
-      // If cart is completely empty on initial load, pre-populate with the 4 items from the reference design
-      setCart((prev) => {
-        if (prev.length > 0) return prev;
-        const kopiSusu = prods.find((p) => p.name === 'Kopi Susu');
-        const cappuccino = prods.find((p) => p.name === 'Cappuccino');
-        const matchaLatte = prods.find((p) => p.name === 'Matcha Latte');
-        const rotiBakar = prods.find((p) => p.name === 'Roti Bakar');
-
-        const initialCart: CartItem[] = [];
-        if (kopiSusu) initialCart.push({ product: kopiSusu, quantity: 1, table: 'T1', orderType: 'dine_in' });
-        if (cappuccino) initialCart.push({ product: cappuccino, quantity: 1, table: 'T1', orderType: 'dine_in' });
-        if (matchaLatte) initialCart.push({ product: matchaLatte, quantity: 1, table: 'T1', orderType: 'dine_in' });
-        if (rotiBakar) initialCart.push({ product: rotiBakar, quantity: 1, table: 'T1', orderType: 'dine_in' });
-
-        return initialCart;
-      });
     } catch (e) {
       console.error('Error loading data:', e);
     }
@@ -369,18 +345,22 @@ export default function App() {
           } else {
             setActiveTab(tab);
           }
+          setIsMobileMenuOpen(false);
         }}
         onLogout={() => setIsRoleModalOpen(true)}
+        isOpenMobile={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
       {/* Main Workspace */}
-      <div className="flex-1 flex flex-col min-w-0 p-5 sm:p-7 overflow-y-auto max-h-screen">
+      <div className="flex-1 flex flex-col min-w-0 p-4 sm:p-6 lg:p-7 overflow-y-auto max-h-screen">
         {/* Top Header */}
         <TopHeader
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
           currentUser={currentUser}
           onOpenUserModal={() => setIsRoleModalOpen(true)}
+          onToggleMobileMenu={() => setIsMobileMenuOpen((prev) => !prev)}
           title={
             activeTab === 'kasir'
               ? 'Kasir'
@@ -401,11 +381,11 @@ export default function App() {
           }
         />
 
-        {/* Tab 1: Kasir Screen matching reference design 1:1 */}
+        {/* Tab 1: Kasir Screen matching reference design 1:1 - Always Side-by-Side */}
         {activeTab === 'kasir' && (
-          <div className="flex flex-col lg:flex-row gap-6 items-start">
-            {/* Left Main Area: Order Mode, Category Filter, Product Grid, Bottom Status Bar */}
-            <div className="flex-1 w-full min-w-0 flex flex-col justify-between">
+          <div className="flex flex-row gap-4 lg:gap-6 items-start overflow-x-auto pb-4">
+            {/* Left Main Area: Order Mode, Category Filter, Product Grid */}
+            <div className="flex-1 min-w-[320px] sm:min-w-[420px] md:min-w-[480px] flex flex-col justify-between">
               <div>
                 {/* 1. Order Mode Bar: Tables vs Take Away + Pilih Meja */}
                 <OrderModeBar
@@ -431,14 +411,14 @@ export default function App() {
                   </span>
                 </div>
 
-                {/* 4. Product Catalog Grid (4 Columns as in mockup) */}
+                {/* 4. Product Catalog Grid */}
                 {filteredProducts.length === 0 ? (
                   <div className="bg-white rounded-3xl border border-[#E5DDD5] p-12 text-center text-[#7A685D]">
                     <p className="font-extrabold text-[#1E120D] text-base">Menu Tidak Ditemukan</p>
                     <p className="text-xs text-[#8C7A6B] mt-1">Coba gunakan kata kunci pencarian lain atau pilih kategori Semua.</p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 sm:gap-4">
                     {filteredProducts.map((product) => {
                       const inCart = cart.find((i) => i.product.id === product.id);
                       return (
@@ -453,29 +433,30 @@ export default function App() {
                   </div>
                 )}
               </div>
+            </div>
 
-              {/* 5. Bottom Status Bar matching reference design */}
+            {/* Right Panel: Status Bar + Cart Panel (Positioned on the right, directly beside the menu) */}
+            <div className="w-[320px] sm:w-[360px] xl:w-[410px] shrink-0 space-y-3.5 sticky top-0">
               <BottomStatusBar
                 orderType={orderType}
                 selectedTable={selectedTable}
                 totalItemsCount={totalItemsCount}
                 grandTotal={grandTotal}
               />
-            </div>
 
-            {/* Right Panel: Cart Panel matching reference design */}
-            <CartPanel
-              cart={cart}
-              storeSettings={storeSettings}
-              paymentMethod={paymentMethod}
-              onSelectPaymentMethod={setPaymentMethod}
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveItem={handleRemoveItem}
-              onClearCart={handleClearCart}
-              onPay={() => setIsPaymentModalOpen(true)}
-              onPrintReceipt={handlePrintCurrentCartReceipt}
-              onSaveTransaction={handleSaveTransactionDirect}
-            />
+              <CartPanel
+                cart={cart}
+                storeSettings={storeSettings}
+                paymentMethod={paymentMethod}
+                onSelectPaymentMethod={setPaymentMethod}
+                onUpdateQuantity={handleUpdateQuantity}
+                onRemoveItem={handleRemoveItem}
+                onClearCart={handleClearCart}
+                onPay={() => setIsPaymentModalOpen(true)}
+                onPrintReceipt={handlePrintCurrentCartReceipt}
+                onSaveTransaction={handleSaveTransactionDirect}
+              />
+            </div>
           </div>
         )}
 

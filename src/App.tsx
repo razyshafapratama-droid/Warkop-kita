@@ -442,6 +442,7 @@ export default function App() {
                 selectedTable={selectedTable}
                 totalItemsCount={totalItemsCount}
                 grandTotal={grandTotal}
+                onSelectTable={setSelectedTable}
               />
 
               <CartPanel

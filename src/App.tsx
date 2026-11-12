@@ -27,10 +27,10 @@ export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [storeSettings, setStoreSettings] = useState<StoreSettings>({
-    storeName: 'Warkop Kita',
+    storeName: 'Warkop Razy',
     tagline: 'Ngopi, Santai, Produktif',
-    address: 'Jl. Kopi Kenangan No. 12, Jakarta',
-    phone: '0812-9876-5432',
+    address: 'Jl. Durian RT 02 RW 10 desa jenang kec.Majenang',
+    phone: '085137398194',
     receiptFooterMessage: 'Terima kasih telah berkunjung ke Warkop Kita!\nNikmati hari santai dan produktif Anda bersama secangkir kopi terbaik.',
     enableTax: true,
     taxRatePercent: 10,

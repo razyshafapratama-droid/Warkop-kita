@@ -27,7 +27,7 @@ export default function App() {
   const [products, setProducts] = useState<Product[]>([]);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [storeSettings, setStoreSettings] = useState<StoreSettings>({
-    storeName: 'Warkop Razy',
+    storeName: 'Warkop Kita',
     tagline: 'Ngopi, Santai, Produktif',
     address: 'Jl. Durian RT 02 RW 10 desa jenang kec.Majenang',
     phone: '085137398194',

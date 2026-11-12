@@ -25,7 +25,7 @@ interface DbSchema {
   users: any[];
 }
 
-// Initial fallback seed for Warkop Kita
+// Initial fallback seed for Warkop Razy
 const defaultProducts = [
   { id: 'prod-1', name: 'Kopi Hitam', category: 'Kopi', description: 'Kopi robusta pilihan, nikmat dan pekat', price: 8000, cost: 4000, stock: 50, unit: 'cup', barcode: 'WK-001', image: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80' },
   { id: 'prod-2', name: 'Kopi Susu', category: 'Kopi', description: 'Perpaduan kopi dan susu berkualitas', price: 10000, cost: 5500, stock: 45, unit: 'cup', barcode: 'WK-002', image: 'https://images.unsplash.com/photo-1517256064527-09c73fc73e38?auto=format&fit=crop&w=600&q=80' },
@@ -88,9 +88,9 @@ function initDatabase(): DbSchema {
     products: defaultProducts,
     transactions: sampleTransactions,
     settings: {
-      storeName: 'Warkop Kita',
+      storeName: 'Warkop Razy',
       tagline: 'Ngopi, Santai, Produktif',
-      address: 'Jl. Kopi Kenangan No. 12, Jakarta',
+      address: 'Jl. Durian RT 02 RW 10 desa jenang kec.Majenang',
       phone: '0812-9876-5432',
       receiptFooterMessage: 'Terima kasih telah berkunjung ke Warkop Kita!\nNikmati hari santai dan produktif Anda bersama secangkir kopi terbaik.',
       enableTax: true,
